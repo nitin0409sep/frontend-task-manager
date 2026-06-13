@@ -68,8 +68,8 @@
               <span class="truncate" [matTooltip]="'Created: ' + (task.createdBy.username | displayName)">Created: {{ task.createdBy.username | displayName }}</span>
             </span>
           </div>
-          <h2 class="m-0 truncate text-lg font-bold text-slate-950 sm:text-xl" [matTooltip]="task.title">{{ task.title }}</h2>
-          <p class="mt-2 truncate text-sm leading-6 text-slate-600 sm:text-base" [matTooltip]="task.description || 'No description'">{{ task.description || "No description" }}</p>
+          <h2 class="m-0 truncate text-lg font-bold text-slate-950 sm:text-xl">{{ task.title }}</h2>
+          <p class="mt-2 truncate text-sm leading-6 text-slate-600 sm:text-base">{{ task.description || "No description" }}</p>
         </div>
 
         <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:justify-end">
