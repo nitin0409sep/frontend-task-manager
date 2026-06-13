@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { apiErrorMessage } from '../../../core/http-error';
+import { ToastService } from '../../../core/toast.service';
 import { UserService } from '../../../core/user.service';
 import { User } from '../../../models/user.model';
 
@@ -22,6 +23,7 @@ export class TeamAssignmentDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private dialogRef: MatDialogRef<TeamAssignmentDialogComponent>,
+    private toast: ToastService,
     private userService: UserService
   ) {}
 
@@ -37,7 +39,8 @@ export class TeamAssignmentDialogComponent {
       next: () => this.dialogRef.close(true),
       error: (error) => {
         this.loading = false;
-        this.error = apiErrorMessage(error, 'Team assignment failed');
+        this.error = '';
+        this.toast.error(apiErrorMessage(error, 'Team assignment failed'));
       }
     });
   }

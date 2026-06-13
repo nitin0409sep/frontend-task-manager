@@ -30,6 +30,17 @@ body {
   width: 100%;
 }
 
+input[type='password']::-ms-clear,
+input[type='password']::-ms-reveal {
+  display: none;
+}
+
+input[type='password']::-webkit-credentials-auto-fill-button,
+input[type='password']::-webkit-caps-lock-indicator {
+  display: none !important;
+  visibility: hidden;
+}
+
 .mat-form-field-appearance-outline:not(.mat-form-field-disabled):hover .mat-form-field-outline,
 .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
   color: #3f51b5;

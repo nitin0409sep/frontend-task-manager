@@ -47,7 +47,7 @@ export class RegisterComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        this.error = apiErrorMessage(error, 'Registration failed');
+        this.toast.error(apiErrorMessage(error, 'Registration failed'));
         this.loading = false;
       }
     });

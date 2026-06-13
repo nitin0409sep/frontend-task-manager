@@ -5,6 +5,7 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { apiErrorMessage } from '../../core/http-error';
 import { TaskService } from '../../core/task.service';
+import { ToastService } from '../../core/toast.service';
 import { UserService } from '../../core/user.service';
 import { Task, TaskStatus } from '../../models/task.model';
 import { User } from '../../models/user.model';
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private router: Router,
     private taskService: TaskService,
+    private toast: ToastService,
     private userService: UserService
   ) {}
 
@@ -310,6 +312,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private showError(error: unknown, fallback: string): void {
-    this.error = apiErrorMessage(error, fallback);
+    this.error = '';
+    this.toast.error(apiErrorMessage(error, fallback));
   }
 }

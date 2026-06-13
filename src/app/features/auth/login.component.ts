@@ -45,7 +45,7 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        this.error = apiErrorMessage(error, 'Login failed');
+        this.toast.error(apiErrorMessage(error, 'Login failed'));
         this.loading = false;
       }
     });

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { apiErrorMessage } from '../../core/http-error';
 import { TaskService } from '../../core/task.service';
+import { ToastService } from '../../core/toast.service';
 import { UserService } from '../../core/user.service';
 import { TaskStatus } from '../../models/task.model';
 import { User } from '../../models/user.model';
@@ -32,6 +33,7 @@ export class TaskFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private taskService: TaskService,
+    private toast: ToastService,
     private userService: UserService
   ) {}
 
@@ -133,6 +135,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   private showError(error: unknown, fallback: string): void {
-    this.error = apiErrorMessage(error, fallback);
+    this.error = '';
+    this.toast.error(apiErrorMessage(error, fallback));
   }
 }
