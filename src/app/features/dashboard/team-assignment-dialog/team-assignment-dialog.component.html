@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Team assignment</h2>
+<div mat-dialog-content class="grid min-w-[320px] gap-4 pt-2 sm:min-w-[520px]">
+  <p class="m-0 pb-2 text-sm text-slate-600">Assign an employee to a team lead.</p>
+
+  <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" *ngIf="error">{{ error }}</p>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Team Lead</mat-label>
+    <mat-select [(ngModel)]="selectedTeamLeadId">
+      <mat-option value="">Select team lead</mat-option>
+      <mat-option *ngFor="let lead of data.teamLeads; trackBy: trackByUser" [value]="lead._id">{{ lead.username | displayName }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Employee</mat-label>
+    <mat-select [(ngModel)]="selectedEmployeeId">
+      <mat-option value="">Select employee</mat-option>
+      <mat-option *ngFor="let employee of data.employees; trackBy: trackByUser" [value]="employee._id">{{ employee.username | displayName }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end" class="!px-6 !pb-5">
+  <button mat-button type="button" (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" type="button" class="loading-button" (click)="assignTeamLead()" [disabled]="!selectedEmployeeId || !selectedTeamLeadId || loading">
+    <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+    <span>Assign</span>
+  </button>
+</div>

@@ -1,0 +1,178 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.mat-toolbar {
+  min-height: 64px;
+}
+
+.mat-mdc-card,
+.mat-card {
+  border: 1px solid #e2e8f0;
+}
+
+.mat-form-field,
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-form-field-appearance-outline:not(.mat-form-field-disabled):hover .mat-form-field-outline,
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #3f51b5;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__trailing,
+.mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: #3f51b5;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border: 2px solid #e2e8f0;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.mat-dialog-content,
+.mat-mdc-dialog-content {
+  scrollbar-gutter: stable;
+}
+
+.dashboard-filter-field .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.dashboard-filter-field .mat-form-field-flex {
+  min-height: 56px;
+}
+
+.skeleton {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 37%, #e2e8f0 63%);
+  background-size: 400% 100%;
+  display: inline-block;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: currentColor;
+}
+
+.loading-button .mat-button-wrapper,
+.loading-button .mdc-button__label {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.loading-button .mat-progress-spinner,
+.loading-button .mat-spinner {
+  display: inline-block;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  height: calc(100vh - 64px);
+}
+
+.dashboard-header {
+  margin-top: -1px;
+}
+
+.dashboard-header::before {
+  background: #f1f5f9;
+  content: '';
+  inset: -24px -24px auto -24px;
+  height: 24px;
+  position: absolute;
+  z-index: -1;
+}
+
+.task-scroll {
+  max-height: calc(100vh - 340px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+@media (max-width: 1024px) {
+  .task-scroll {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+}
+
+.task-scroll {
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.app-toolbar {
+  height: 64px;
+}
+
+.success-toast {
+  --mdc-snackbar-container-color: #047857;
+  --mat-mdc-snack-bar-button-color: #ffffff;
+  color: #ffffff;
+}
+
+.error-toast {
+  --mdc-snackbar-container-color: #b91c1c;
+  --mat-mdc-snack-bar-button-color: #ffffff;
+  color: #ffffff;
+}

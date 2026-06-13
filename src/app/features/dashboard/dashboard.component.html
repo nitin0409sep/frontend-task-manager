@@ -1,0 +1,105 @@
+<section class="dashboard-shell space-y-4 sm:space-y-6">
+  <div class="dashboard-header z-40 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-6 lg:sticky lg:top-20">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-600 sm:text-sm">{{ currentUser.role }} dashboard</p>
+        <h1 class="m-0 text-2xl font-bold text-slate-950 sm:text-3xl">Task Management</h1>
+        <p class="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">{{ subtitle }}</p>
+      </div>
+      <div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:w-auto lg:items-center lg:justify-end">
+        <mat-form-field appearance="outline" class="dashboard-filter-field w-full sm:col-span-2 lg:w-64" subscriptSizing="dynamic" *ngIf="showTaskFilters">
+          <mat-label>Search tasks</mat-label>
+          <input matInput type="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" (keyup.enter)="applyFilters()">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="dashboard-filter-field w-full sm:col-span-2 lg:w-56" subscriptSizing="dynamic" *ngIf="showTaskFilters">
+          <mat-label>Filter tasks</mat-label>
+          <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+            <mat-option value="all">All tasks</mat-option>
+            <mat-option value="pending">Pending</mat-option>
+            <mat-option value="completed">Completed</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-stroked-button type="button" class="loading-button h-12 w-full lg:h-14 lg:w-40" *ngIf="isManager" (click)="openTeamAssignment()" [disabled]="openingTeamAssignment">
+          <mat-spinner *ngIf="openingTeamAssignment" diameter="18"></mat-spinner>
+          <span>Team assignment</span>
+        </button>
+        <button mat-raised-button color="primary" type="button" class="loading-button h-12 w-full lg:h-14 lg:w-32" (click)="createTask()" [disabled]="creatingTask">
+          <mat-spinner *ngIf="creatingTask" diameter="18"></mat-spinner>
+          <span>New task</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" *ngIf="error">{{ error }}</p>
+
+  <div class="space-y-4">
+    <ng-container *ngIf="loading && !tasks.length; else taskList">
+      <mat-card class="!rounded-2xl !p-0 shadow-sm" *ngFor="let item of [1, 2, 3]; trackBy: trackByValue">
+        <div class="flex flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
+          <div class="min-w-0 flex-1 space-y-3">
+            <div class="flex gap-2">
+              <span class="skeleton h-6 w-24 rounded-full"></span>
+              <span class="skeleton h-6 w-40 rounded-full"></span>
+            </div>
+            <div class="skeleton h-6 w-2/3 rounded"></div>
+            <div class="skeleton h-4 w-full rounded"></div>
+            <div class="skeleton h-4 w-4/5 rounded"></div>
+          </div>
+          <div class="flex gap-2">
+            <span class="skeleton h-10 w-32 rounded"></span>
+            <span class="skeleton h-10 w-16 rounded"></span>
+            <span class="skeleton h-10 w-20 rounded"></span>
+          </div>
+        </div>
+      </mat-card>
+    </ng-container>
+
+    <ng-template #taskList>
+    <mat-card class="!rounded-2xl !p-0 shadow-sm transition hover:shadow-md" *ngFor="let task of tasks; trackBy: trackByTask">
+      <div class="flex flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
+        <div class="min-w-0 flex-1">
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <span class="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide" [ngClass]="task.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">{{ task.status }}</span>
+            <span class="inline-flex max-w-full rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 sm:max-w-xs">
+              <span class="truncate" [matTooltip]="'Assigned: ' + (task.assignedTo.username | displayName)">Assigned: {{ task.assignedTo.username | displayName }}</span>
+            </span>
+            <span class="inline-flex max-w-full rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 sm:max-w-xs">
+              <span class="truncate" [matTooltip]="'Created: ' + (task.createdBy.username | displayName)">Created: {{ task.createdBy.username | displayName }}</span>
+            </span>
+          </div>
+          <h2 class="m-0 truncate text-lg font-bold text-slate-950 sm:text-xl" [matTooltip]="task.title">{{ task.title }}</h2>
+          <p class="mt-2 truncate text-sm leading-6 text-slate-600 sm:text-base" [matTooltip]="task.description || 'No description'">{{ task.description || "No description" }}</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:justify-end">
+          <button mat-stroked-button type="button" class="w-full sm:w-32" (click)="toggleStatus(task)">{{ task.status === "completed" ? "Mark pending" : "Complete" }}</button>
+          <button mat-stroked-button color="primary" type="button" class="w-full sm:w-auto" *ngIf="canEditTask(task)" (click)="editTask(task)">Edit</button>
+          <button mat-stroked-button color="warn" type="button" class="w-full sm:w-auto" *ngIf="canDeleteTask(task)" (click)="deleteTask(task)">Delete</button>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="!rounded-2xl !p-0 overflow-hidden text-center shadow-sm" *ngIf="!tasks.length">
+      <div class="mx-auto flex max-w-xl flex-col items-center px-6 py-12">
+        <h2 class="m-0 text-2xl font-bold text-slate-950">{{ emptyStateTitle }}</h2>
+        <p class="mb-6 mt-2 max-w-md text-base leading-6 text-slate-600">{{ emptyStateMessage }}</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <button mat-stroked-button type="button" *ngIf="statusFilter !== 'all' || searchTerm" (click)="clearFilter()">View all tasks</button>
+          <button mat-raised-button color="primary" type="button" (click)="createTask()">New task</button>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="flex items-center justify-center rounded-2xl bg-white px-4 py-4 text-sm text-slate-600 shadow-sm ring-1 ring-slate-200" *ngIf="total > 0">
+      <div class="flex items-center gap-3" *ngIf="loadingMore; else loadedCount">
+        <mat-spinner diameter="22"></mat-spinner>
+        <span>Loading more tasks...</span>
+      </div>
+      <ng-template #loadedCount>
+        <span>{{ tasks.length }} of {{ total }} tasks loaded</span>
+      </ng-template>
+    </div>
+    </ng-template>
+  </div>
+</section>

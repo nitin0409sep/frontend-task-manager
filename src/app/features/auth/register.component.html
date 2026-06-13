@@ -1,0 +1,32 @@
+<section class="min-h-[70vh] flex items-center justify-center">
+  <mat-card class="w-full max-w-md p-6">
+    <mat-card-title class="text-2xl font-semibold mb-1">Register</mat-card-title>
+    <mat-card-subtitle>New accounts are created as Employees</mat-card-subtitle>
+    <form class="grid gap-4 mt-6" [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username">
+        <mat-error *ngIf="form.controls.username.invalid">Username must be 3-40 characters</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+        <mat-error *ngIf="form.controls.email.invalid">Valid email is required</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password">
+        <button mat-icon-button matSuffix type="button" aria-label="Toggle password visibility" (click)="showPassword = !showPassword">
+          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="form.controls.password.invalid">Password must be at least 8 characters</mat-error>
+      </mat-form-field>
+      <p class="text-sm font-medium text-red-700" *ngIf="error">{{ error }}</p>
+      <button mat-raised-button color="primary" type="submit" class="loading-button" [disabled]="form.invalid || loading">
+        <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+        <span>{{ loading ? "Creating..." : "Register" }}</span>
+      </button>
+    </form>
+    <p class="mt-4 text-sm text-slate-600">Already registered? <a routerLink="/login" class="font-semibold text-blue-600 hover:text-blue-700 hover:underline">Login</a></p>
+  </mat-card>
+</section>
