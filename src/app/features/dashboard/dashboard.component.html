@@ -75,7 +75,7 @@
         <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:justify-end">
           <button mat-stroked-button type="button" class="loading-button w-full sm:w-32" (click)="toggleStatus(task)" [disabled]="isStatusUpdating(task)">
             <mat-spinner *ngIf="isStatusUpdating(task)" diameter="18"></mat-spinner>
-            <span>{{ task.status === "completed" ? "Mark pending" : "Complete" }}</span>
+            <span>{{ statusButtonLabel(task) }}</span>
           </button>
           <button mat-stroked-button color="primary" type="button" class="w-full sm:w-auto" *ngIf="canEditTask(task)" (click)="editTask(task)">Edit</button>
           <button mat-stroked-button color="warn" type="button" class="w-full sm:w-auto" *ngIf="canDeleteTask(task)" (click)="deleteTask(task)">Delete</button>

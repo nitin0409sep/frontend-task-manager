@@ -161,6 +161,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.statusUpdatingTaskIds.has(task._id);
   }
 
+  statusButtonLabel(task: Task): string {
+    if (this.isStatusUpdating(task)) {
+      return 'Updating...';
+    }
+
+    return task.status === 'completed' ? 'Mark pending' : 'Complete';
+  }
+
   onSearchChange(value: string): void {
     this.searchChanged.next(value.trim());
   }
@@ -284,16 +292,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.statusUpdatingTaskIds.add(task._id);
 
     this.taskService.updateTask(task._id, { status }).subscribe({
-      next: () => {
+      next: (updatedTask) => {
+        this.applyUpdatedTask(updatedTask);
         this.statusUpdatingTaskIds.delete(task._id);
-        this.page = 1;
-        this.loadTasks();
       },
       error: (error) => {
         this.statusUpdatingTaskIds.delete(task._id);
         this.showError(error, 'Status update failed');
       }
     });
+  }
+
+  private applyUpdatedTask(updatedTask: Task): void {
+    if (this.statusFilter !== 'all' && updatedTask.status !== this.statusFilter) {
+      const previousLength = this.tasks.length;
+      this.tasks = this.tasks.filter((task) => task._id !== updatedTask._id);
+
+      if (this.tasks.length !== previousLength) {
+        this.total = Math.max(0, this.total - 1);
+      }
+
+      return;
+    }
+
+    this.tasks = this.tasks.map((task) => (task._id === updatedTask._id ? updatedTask : task));
   }
 
   deleteTask(task: Task): void {
