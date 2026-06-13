@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   {
     path: '',
     loadChildren: () => import('./features/auth/auth.module').then((module) => module.AuthModule)
@@ -14,7 +15,6 @@ const routes: Routes = [
     path: 'tasks',
     loadChildren: () => import('./features/tasks/tasks.module').then((module) => module.TasksModule)
   },
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' }
 ];
 
