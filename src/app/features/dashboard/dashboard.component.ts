@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   creatingTask = false;
   openingTeamAssignment = false;
   error = '';
+  private statusUpdatingTaskIds = new Set<string>();
   private searchChanged = new Subject<string>();
   private destroyed = new Subject<void>();
 
@@ -156,6 +157,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return value;
   }
 
+  isStatusUpdating(task: Task): boolean {
+    return this.statusUpdatingTaskIds.has(task._id);
+  }
+
   onSearchChange(value: string): void {
     this.searchChanged.next(value.trim());
   }
@@ -271,13 +276,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   toggleStatus(task: Task): void {
+    if (this.isStatusUpdating(task)) {
+      return;
+    }
+
     const status: TaskStatus = task.status === 'completed' ? 'pending' : 'completed';
+    this.statusUpdatingTaskIds.add(task._id);
+
     this.taskService.updateTask(task._id, { status }).subscribe({
       next: () => {
+        this.statusUpdatingTaskIds.delete(task._id);
         this.page = 1;
         this.loadTasks();
       },
-      error: (error) => this.showError(error, 'Status update failed')
+      error: (error) => {
+        this.statusUpdatingTaskIds.delete(task._id);
+        this.showError(error, 'Status update failed');
+      }
     });
   }
 
