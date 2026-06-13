@@ -13,41 +13,55 @@
   <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" *ngIf="error">{{ error }}</p>
 
   <mat-card class="!rounded-2xl !p-0 shadow-sm">
-    <form class="grid gap-4 p-6" [formGroup]="taskForm" (ngSubmit)="saveTask()">
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Title</mat-label>
-        <input matInput type="text" formControlName="title">
-        <mat-error *ngIf="taskForm.controls.title.invalid">Title must be 3-120 characters</mat-error>
-      </mat-form-field>
+    <ng-container *ngIf="isEditMode && loadingTask; else taskFormContent">
+      <div class="grid gap-4 p-6">
+        <span class="skeleton h-14 w-full rounded"></span>
+        <span class="skeleton h-36 w-full rounded"></span>
+        <div class="grid gap-4 md:grid-cols-2">
+          <span class="skeleton h-14 w-full rounded"></span>
+          <span class="skeleton h-14 w-full rounded" *ngIf="canAssign"></span>
+        </div>
+        <span class="skeleton h-10 w-28 rounded"></span>
+      </div>
+    </ng-container>
 
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Description</mat-label>
-        <textarea matInput rows="6" formControlName="description"></textarea>
-      </mat-form-field>
-
-      <div class="grid gap-4 md:grid-cols-2">
+    <ng-template #taskFormContent>
+      <form class="grid gap-4 p-6" [formGroup]="taskForm" (ngSubmit)="saveTask()">
         <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option value="pending">Pending</mat-option>
-            <mat-option value="completed">Completed</mat-option>
-          </mat-select>
+          <mat-label>Title</mat-label>
+          <input matInput type="text" formControlName="title">
+          <mat-error *ngIf="taskForm.controls.title.invalid">Title must be 3-120 characters</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-full" *ngIf="canAssign">
-          <mat-label>Assign To</mat-label>
-          <mat-select formControlName="assignedTo">
-            <mat-option *ngFor="let user of assignableUsers; trackBy: trackByUser" [value]="user._id">{{ user.username | displayName }}</mat-option>
-          </mat-select>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="6" formControlName="description"></textarea>
         </mat-form-field>
-      </div>
 
-      <div class="flex flex-wrap items-center gap-3 pt-2">
-        <button mat-raised-button color="primary" type="submit" class="loading-button" [disabled]="taskForm.invalid || loadingTask || savingTask">
-          <mat-spinner *ngIf="savingTask" diameter="18"></mat-spinner>
-          <span>{{ isEditMode ? 'Update task' : 'Create task' }}</span>
-        </button>
-      </div>
-    </form>
+        <div class="grid gap-4 md:grid-cols-2">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="pending">Pending</mat-option>
+              <mat-option value="completed">Completed</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full" *ngIf="canAssign">
+            <mat-label>Assign To</mat-label>
+            <mat-select formControlName="assignedTo">
+              <mat-option *ngFor="let user of assignableUsers; trackBy: trackByUser" [value]="user._id">{{ user.username | displayName }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button mat-raised-button color="primary" type="submit" class="loading-button" [disabled]="taskForm.invalid || loadingTask || savingTask">
+            <mat-spinner *ngIf="savingTask" diameter="18"></mat-spinner>
+            <span>{{ isEditMode ? 'Update task' : 'Create task' }}</span>
+          </button>
+        </div>
+      </form>
+    </ng-template>
   </mat-card>
 </section>

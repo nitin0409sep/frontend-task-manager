@@ -23,7 +23,7 @@
           <mat-spinner *ngIf="openingTeamAssignment" diameter="18"></mat-spinner>
           <span>Team assignment</span>
         </button>
-        <button mat-raised-button color="primary" type="button" class="loading-button h-12 w-full lg:h-14 lg:w-32" (click)="createTask()" [disabled]="creatingTask">
+        <button mat-raised-button color="primary" type="button" class="loading-button h-12 w-full sm:col-span-2 lg:h-14 lg:w-32" (click)="createTask()" [disabled]="creatingTask">
           <mat-spinner *ngIf="creatingTask" diameter="18"></mat-spinner>
           <span>New task</span>
         </button>
